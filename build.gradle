@@ -1,9 +1,5 @@
 plugins {
     // Apply the application plugin to add support for building a CLI application in Java.
-    id 'jacoco'    
-    id 'java'
-    id 'checkstyle'
-
     id 'java-library'
     id 'maven-publish'
     //id 'com.jfrog.artifactory' version '4.29.4'
@@ -19,10 +15,14 @@ group = 'gradle.test'
 sourceCompatibility = '1.8'
 
 repositories {
-    // mavenCentral()
      maven {
       url "https://plugins.gradle.org/m2/"
     }
+}
+
+dependencies {
+     runtimeOnly group: 'org.sonarsource.scanner.gradle', name: 'sonarqube-gradle-plugin', version: '3.2.0'
+    testImplementation 'junit:junit:4.12'
 }
 
 publishing {
@@ -35,7 +35,7 @@ publishing {
     repositories {
         maven {
             name 'nexus'
-            url "http://172.17.0.4:8081/repository/maven-snapshots/"
+            url "http://172.0.0.1:8081/repository/maven-snapshots/"
             allowInsecureProtocol true
             credentials {
                 username "admin"
@@ -52,45 +52,22 @@ publishing {
     }
 }
 
-dependencies {
-    runtimeOnly group: 'org.sonarsource.scanner.gradle', name: 'sonarqube-gradle-plugin', version: '3.2.0'
-    testImplementation 'junit:junit:4.12'
-    testImplementation "org.mockito:mockito-core:3.+"
+// test {
+//     testLogging {
+//         events "failed"
+//         exceptionFormat "full"
+//     }
+//     filter {
+//         includeTestsMatching "jalau.at18.katas.*"
+//     }
+// }
+
+application {
+    // Define the main class for the application.
+    mainClass = 'jalau.at18.katas.bankocr.joser'
 }
 
-test {
-    testLogging {
-        events "failed"
-        exceptionFormat "full"
-    }
-    filter {
-        includeTestsMatching "jalau.at18.katas.*"
-        // includeTestsMatching "jalau.at18.architects.*"
-        // includeTestsMatching "jalau.at18.azul.*"
-        // includeTestsMatching "jalau.at18.kingoftokyo.*"
-        // includeTestsMatching "jalau.at18.war.*"
-    }
-}
 
-checkstyle {
-    checkstyleMain.source = "src/main/"
-    checkstyleMain.excludes = ["**/src/test/**"]
-}
-
-checkstyleMain {
-    source = 'src/main/java'
-}
-
-jacocoTestReport {
-    afterEvaluate {
-        classDirectories.setFrom(files(classDirectories.files.collect {
-            fileTree(dir: it, exclude: ['jalau/at18/katas/**'])
-        }))
-    }
-}
-
-test.finalizedBy("checkstyleMain")
-test.finalizedBy("jacocoTestReport")
 
 
 
