@@ -5,14 +5,14 @@ plugins {
     //id 'com.jfrog.artifactory' version '4.29.4'
     id 'application'
     id 'org.sonarqube' version '3.2.0'
-    // id 'io.qameta.allure' version '2.11.2'
+    id 'io.qameta.allure' version '2.11.2'
 }
 
 version = '1.0.3-SNAPSHOT'
 
 group = 'gradle.test'
 
-// sourceCompatibility = '1.8'
+sourceCompatibility = '1.8'
 
 repositories {
      maven {
@@ -21,8 +21,9 @@ repositories {
 }
 
 dependencies {
+      implementation 'com.google.guava:guava:31.0.1-jre'
      runtimeOnly group: 'org.sonarsource.scanner.gradle', name: 'sonarqube-gradle-plugin', version: '3.2.0'
-    testImplementation 'junit:junit:4.12'
+    testImplementation group: 'io.qameta.allure', name: 'allure-junit4', version: '2.11.2'
 }
 
 publishing {
@@ -48,6 +49,16 @@ publishing {
     publications {
         mavenJava(MavenPublication) {
             from components.java
+        }
+    }
+}
+
+testing {
+    suites {
+        // Configure the built-in test suite
+        test {
+            // Use JUnit4 test framework
+            useJUnit('4.13.2')
         }
     }
 }
