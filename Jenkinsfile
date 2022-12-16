@@ -39,15 +39,10 @@ pipeline {
 
         stage("Quality Gate") {
             steps {
-                withSonarQubeEnv(installationName: 'sonarqube-jenkins') { 
-                    sh './gradlew sonarqube'
+                timeout(time: 5, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
                 }
-            } 
-            // steps {
-            //     timeout(time: 2, unit: 'MINUTES') {
-            //         waitForQualityGate abortPipeline: true
-            //     }
-            // }
+            }
         }
 
         stage('Upload') {
