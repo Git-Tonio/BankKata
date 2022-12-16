@@ -2,11 +2,58 @@ apply plugin: 'jacoco'
 apply plugin: 'java'
 apply plugin: 'checkstyle'
 
+plugins {
+    // Apply the application plugin to add support for building a CLI application in Java.
+    id 'java-library'
+    id 'maven-publish'
+    //id 'com.jfrog.artifactory' version '4.29.4'
+    id 'application'
+    id 'org.sonarqube' version '3.2.0'
+    id 'io.qameta.allure' version '2.11.2'
+}
+
+version = '1.0.3-SNAPSHOT'
+
+group = 'gradle.test'
+
+sourceCompatibility = '1.8'
+
 repositories {
-    mavenCentral()
+    // mavenCentral()
+     maven {
+      url "https://plugins.gradle.org/m2/"
+    }
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            from components.java
+        }
+    }
+
+    repositories {
+        maven {
+            name 'nexus'
+            url "http://172.17.0.4:8081/repository/maven-snapshots/"
+            allowInsecureProtocol true
+            credentials {
+                username "admin"
+                password "Control123"
+            }
+        }
+    }
+}
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
+    }
 }
 
 dependencies {
+    runtimeOnly group: 'org.sonarsource.scanner.gradle', name: 'sonarqube-gradle-plugin', version: '3.2.0'
     testImplementation 'junit:junit:4.12'
     testImplementation "org.mockito:mockito-core:3.+"
 }
