@@ -14,21 +14,7 @@ pipeline {
             } 
         }
 
-        // stage('Report') {
-        //     steps {
-        //         //allure includeProperties: false, jdk: '', results: [[path: 'allure-report']]
-        //         script {
-        //             allure([
-        //                     includeProperties: false,
-        //                     jdk: '',
-        //                     properties: [],
-        //                     reportBuildPolicy: 'ALWAYS',
-        //                     results: [[path: 'allure-report']]
-        //             ])
-        //         }
-        //     } 
-        // }
-
+     
         stage('Scan') {
             steps {
                 withSonarQubeEnv(installationName: 'sonarqube-jenkins') { 
@@ -39,8 +25,10 @@ pipeline {
 
         stage("Quality Gate") {
             steps {
-                sh './gradlew test'
-            } 
+                timeout(time: 5, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
+                }
+            }
         }
 
         stage('Upload') {
