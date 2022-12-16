@@ -36,11 +36,11 @@ publishing {
     repositories {
         maven {
             name 'nexus'
-            url "http://172.0.0.1:8081/repository/maven-snapshots/"
+            url "http://10.0.2.15:8081/repository/maven-snapshots/"
             allowInsecureProtocol true
             credentials {
                 username "admin"
-                password "Control123"
+                password "admin"
             }
         }
     }
