@@ -1,9 +1,9 @@
-apply plugin: 'jacoco'
-apply plugin: 'java'
-apply plugin: 'checkstyle'
-
 plugins {
     // Apply the application plugin to add support for building a CLI application in Java.
+    id 'jacoco'    
+    id 'java'
+    id 'checkstyle'
+
     id 'java-library'
     id 'maven-publish'
     //id 'com.jfrog.artifactory' version '4.29.4'
